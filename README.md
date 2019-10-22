@@ -11,4 +11,4 @@
 
 ### Платформы и технологии
 - IDE - Android Studio
-- Lang - Java
+- Lang - Kotlin
