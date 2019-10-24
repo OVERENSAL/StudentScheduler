@@ -12,3 +12,5 @@
 ### Платформы и технологии
 - IDE - Android Studio
 - Lang - Kotlin
+
+### [План обучения](https://docs.google.com/document/d/1GyHBHTkpkxPu-_9L9VT4z_7kTw7JCIkjYZIT6fE57n0/edit?usp=sharing)
