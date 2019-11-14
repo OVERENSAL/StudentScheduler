@@ -3,4 +3,6 @@
     <string name="add_task">Добавьте задачу</string>
     <string name="write_task">Напишите задачу</string>
     <string name="select_date">Выбрать дату</string>
+    <string name="startTimeButton">С</string>
+    <string name="finishTimeButton">До</string>
 </resources>
