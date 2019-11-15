@@ -69,7 +69,7 @@ class AddTasksActivity : AppCompatActivity() {
             val tpd = TimePickerDialog.OnTimeSetListener { timePicker, startHour, startMinute ->
                 c.set(Calendar.HOUR_OF_DAY, startHour)
                 c.set(Calendar.MINUTE, startMinute)
-                startTimeView.text = SimpleDateFormat("HH:mm").format(c.time)
+                startTimeButton.text = SimpleDateFormat("HH:mm").format(c.time)
             }
             TimePickerDialog(
                 this,
@@ -85,7 +85,7 @@ class AddTasksActivity : AppCompatActivity() {
             val tpd = TimePickerDialog.OnTimeSetListener { timePicker, finishHour, finishMinute ->
                 c.set(Calendar.HOUR_OF_DAY, finishHour)
                 c.set(Calendar.MINUTE, finishMinute)
-                finishTimeView.text = SimpleDateFormat("HH:mm").format(c.time)
+                finishTimeButton.text = SimpleDateFormat("HH:mm").format(c.time)
             }
             TimePickerDialog(
                 this,
