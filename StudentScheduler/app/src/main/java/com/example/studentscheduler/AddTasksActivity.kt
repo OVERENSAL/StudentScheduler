@@ -37,6 +37,7 @@ class AddTasksActivity : AppCompatActivity() {
                 c.set(Calendar.YEAR, year)
                 c.set(Calendar.MONTH, month)
                 c.set(Calendar.DAY_OF_MONTH, day)
+                calendar_button.text = day.toString() + "." + month.toString() + "." + year.toString()
             }
             DatePickerDialog(
                 this,
@@ -47,24 +48,7 @@ class AddTasksActivity : AppCompatActivity() {
                 c.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
-        /*
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH)
 
-        calendar_button.setOnClickListener {
-            //сделать на русском языке
-            val dpd = DatePickerDialog(
-                this,
-                R.style.DatePickerTheme,
-                DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth -> },
-                year,
-                month,
-                dayOfMonth
-            )
-            dpd.show()
-        }
-*/
         startTimeButton.setOnClickListener {
             val tpd = TimePickerDialog.OnTimeSetListener { timePicker, startHour, startMinute ->
                 c.set(Calendar.HOUR_OF_DAY, startHour)

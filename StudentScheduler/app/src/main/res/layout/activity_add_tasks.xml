@@ -8,12 +8,136 @@
     tools:context=".AddTasksActivity"
     android:background="@color/backgroundColor">
 
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:hint="@string/write_task"
+                android:inputType="textMultiLine"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:background="#AAA9A9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calendar_button" />
+
+            <Button
+                android:id="@+id/calendar_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/mainColor"
+                android:text="@string/select_date"
+                android:textColor="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_text" />
+
+            <TextView
+                android:id="@+id/runTimeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:text="@string/runTime"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/view" />
+
+            <Button
+                android:id="@+id/startTimeButton"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/mainColor"
+                android:text="@string/_00_00"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toEndOf="@+id/startTimeView"
+                app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
+
+            <TextView
+                android:id="@+id/startTimeView"
+                android:layout_width="76dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/startTimeView"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
+
+            <Button
+                android:id="@+id/finishTimeButton"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/mainColor"
+                android:text="@string/_00_00"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toEndOf="@+id/finishTimeView"
+                app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
+
+            <TextView
+                android:id="@+id/finishTimeView"
+                android:layout_width="76dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/finishTimeView"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/startTimeButton"
+                app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
         android:background="@color/mainColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -31,111 +155,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <EditText
-        android:id="@+id/edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:hint="@string/write_task"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp"
-        android:background="#AAA9A9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendar_button" />
-
-    <Button
-        android:id="@+id/calendar_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/mainColor"
-        android:text="@string/select_date"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text" />
-
-    <TextView
-        android:id="@+id/runTimeView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
-        android:text="@string/runTime"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
-    <Button
-        android:id="@+id/startTimeButton"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/mainColor"
-        android:text="@string/_00_00"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toEndOf="@+id/startTimeView"
-        app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
-
-    <TextView
-        android:id="@+id/startTimeView"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:text="@string/startTimeView"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
-
-    <Button
-        android:id="@+id/finishTimeButton"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/mainColor"
-        android:text="@string/_00_00"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toEndOf="@+id/finishTimeView"
-        app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
-
-    <TextView
-        android:id="@+id/finishTimeView"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:text="@string/finishTimeView"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/startTimeButton"
-        app:layout_constraintTop_toBottomOf="@+id/runTimeView" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
