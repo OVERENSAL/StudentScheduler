@@ -16,15 +16,15 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    var globalDate = ZonedDateTime.now()
+    lateinit var globalDate: ZonedDateTime
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         AndroidThreeTen.init(this)
-        val currentDate2 = ZonedDateTime.now()
-        date.text = currentDate2.format(DateTimeFormatter.ofPattern("dd.M.yyyy"))
+        globalDate =  ZonedDateTime.now()
+        date.text = globalDate.format(DateTimeFormatter.ofPattern("dd.M.yyyy"))
     }
 
     fun prevDate(view: View) {
