@@ -5,7 +5,6 @@
     <string name="select_date">Выбрать дату</string>
     <string name="startTimeButton">С</string>
     <string name="finishTimeButton">До</string>
-    <string name="setTime">Установите время</string>
     <string name="runTime">Время выполнения</string>
     <string name="_00_00">00:00</string>
     <string name="startTimeView">С</string>
