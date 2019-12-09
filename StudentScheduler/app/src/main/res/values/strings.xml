@@ -9,4 +9,5 @@
     <string name="_00_00">00:00</string>
     <string name="startTimeView">С</string>
     <string name="finishTimeView">До</string>
+    <string name="task_priority">Приоритет задачи</string>
 </resources>

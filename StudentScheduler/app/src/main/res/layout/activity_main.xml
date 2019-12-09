@@ -20,11 +20,11 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:onClick="prevDate"
-            android:src="@drawable/prev_date"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/date"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_left_black_24dp"/>
 
         <TextView
             android:id="@+id/date"
@@ -44,7 +44,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:onClick="nextDate"
-            android:src="@drawable/next_date"
+            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/date"
@@ -59,7 +59,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
         android:onClick="addTasksActivity"
-        android:src="@drawable/ic_add"
+        app:srcCompat="@drawable/ic_add_circle_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

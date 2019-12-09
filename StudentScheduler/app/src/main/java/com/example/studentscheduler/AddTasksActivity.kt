@@ -12,16 +12,26 @@ import androidx.core.app.ComponentActivity.ExtraData
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class AddTasksActivity : AppCompatActivity() {
+    private lateinit var myViewModel: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_tasks)
+        myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
+
+        //кривая инициализация вьюшек
+        if (myViewModel.getDate() != "")
+            calendar_button.text = myViewModel.getDate()
+        if (myViewModel.getStartTime() != "")
+            startTimeButton.text = myViewModel.getStartTime()
+        if (myViewModel.getFinishTime() != "")
+            finishTimeButton.text = myViewModel.getFinishTime()
 
         val imm =
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager //автоматически вылазит клавиатура
@@ -31,13 +41,14 @@ class AddTasksActivity : AppCompatActivity() {
         )//не убирается, когда сворачиваешь приложение с открытой клавиатурой
 
         val c = Calendar.getInstance()
-
+        //появляется датапикер
         calendar_button.setOnClickListener {
             val dpd = DatePickerDialog.OnDateSetListener { dataPicker, year, month, day ->
                 c.set(Calendar.YEAR, year)
                 c.set(Calendar.MONTH, month)
                 c.set(Calendar.DAY_OF_MONTH, day)
-                calendar_button.text = day.toString() + "." + month.toString() + "." + year.toString()
+                myViewModel.setDate(day.toString() + "." + (month + 1).toString() + "." + year.toString())
+                calendar_button.text = myViewModel.getDate()
             }
             DatePickerDialog(
                 this,
@@ -48,12 +59,13 @@ class AddTasksActivity : AppCompatActivity() {
                 c.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
-
+        //появляется таймпикер
         startTimeButton.setOnClickListener {
             val tpd = TimePickerDialog.OnTimeSetListener { timePicker, startHour, startMinute ->
                 c.set(Calendar.HOUR_OF_DAY, startHour)
                 c.set(Calendar.MINUTE, startMinute)
-                startTimeButton.text = SimpleDateFormat("HH:mm").format(c.time)
+                myViewModel.setStartTime(SimpleDateFormat("HH:mm").format(c.time))
+                startTimeButton.text = myViewModel.getStartTime()
             }
             TimePickerDialog(
                 this,
@@ -64,12 +76,13 @@ class AddTasksActivity : AppCompatActivity() {
                 true
             ).show()
         }
-
+        //появляется таймпикер
         finishTimeButton.setOnClickListener {
             val tpd = TimePickerDialog.OnTimeSetListener { timePicker, finishHour, finishMinute ->
                 c.set(Calendar.HOUR_OF_DAY, finishHour)
                 c.set(Calendar.MINUTE, finishMinute)
-                finishTimeButton.text = SimpleDateFormat("HH:mm").format(c.time)
+                myViewModel.setFinishTime(SimpleDateFormat("HH:mm").format(c.time))
+                finishTimeButton.text = myViewModel.getFinishTime()
             }
             TimePickerDialog(
                 this,
