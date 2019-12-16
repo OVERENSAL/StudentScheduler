@@ -1,23 +1,14 @@
 package com.example.studentscheduler
 
-import android.app.Application
 import android.content.Intent
-import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
 import android.view.View
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.android.synthetic.main.activity_main.*
 import org.threeten.bp.ZonedDateTime
-import java.text.SimpleDateFormat
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.*
 
-// TODO("Посмотреть способы сохранения состояние экрана после переворота ViewModels или Moxy")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var myViewModel: MyViewModel

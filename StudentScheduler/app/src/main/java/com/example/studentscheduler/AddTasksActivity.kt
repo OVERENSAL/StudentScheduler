@@ -5,13 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.content.Context.INPUT_METHOD_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
 import java.text.SimpleDateFormat

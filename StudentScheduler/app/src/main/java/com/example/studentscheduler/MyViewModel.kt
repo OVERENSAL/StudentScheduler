@@ -1,7 +1,5 @@
 package com.example.studentscheduler
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import org.threeten.bp.ZonedDateTime
 
