@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
 import java.text.SimpleDateFormat
@@ -92,11 +93,15 @@ class AddTasksActivity : AppCompatActivity() {
             ).show()
         }
 
+//добавление задачи в Room
         addTaskButton.setOnClickListener {
-            val task = Task(startTimeTask = startTimeButton.text,
-                finishTimeTask = finishTimeButton.text,
-                textTask = editText.text,
-                dateTask = calendar_button.text)
+            val task = Task(startTimeTask = startTimeButton.text.toString(),
+                finishTimeTask = finishTimeButton.text.toString(),
+                textTask = editText.text.toString(),
+                dateTask = calendar_button.text.toString())
+
+            room.taskDao().insert(task) //crash
+            Toast.makeText(applicationContext, "Задача добавлена", Toast.LENGTH_LONG).show()
         }
     }
 }
