@@ -12,11 +12,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class AddTasksActivity : AppCompatActivity() {
+    private lateinit var room: TaskDataBase
     private lateinit var myViewModel: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_tasks)
+
+        room = TaskDataBase.getInstance(applicationContext)!!//определение room
+
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
 
         //кривая инициализация вьюшек
@@ -86,6 +90,13 @@ class AddTasksActivity : AppCompatActivity() {
                 c.get(Calendar.MINUTE),
                 true
             ).show()
+        }
+
+        addTaskButton.setOnClickListener {
+            val task = Task(startTimeTask = startTimeButton.text,
+                finishTimeTask = finishTimeButton.text,
+                textTask = editText.text,
+                dateTask = calendar_button.text)
         }
     }
 }
