@@ -14,7 +14,7 @@ class MyViewModel : ViewModel() {
     private var globalDate : ZonedDateTime = ZonedDateTime.now()
     private val room : TaskDataBase = CalendarApplication.room
 
-    val showTaskEvent = SingleLiveEvent<String>()
+    private val showTaskEvent = SingleLiveEvent<String>()
 
     fun setDate(date: String) {
         this.date = date
