@@ -4,7 +4,8 @@ import androidx.room.*
 
 @Entity
 data class Task (
-    @PrimaryKey var dateTask: String,
+    @PrimaryKey var id: Int,
+    var dateTask: String,
     var startTimeTask: String,
     var finishTimeTask: String,
     var textTask: String

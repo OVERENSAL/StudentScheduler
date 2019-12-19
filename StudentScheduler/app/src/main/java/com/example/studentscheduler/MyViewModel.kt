@@ -1,6 +1,10 @@
 package com.example.studentscheduler
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 
 class MyViewModel : ViewModel() {
@@ -8,6 +12,9 @@ class MyViewModel : ViewModel() {
     private var startTime : String = ""
     private var finishTime : String = ""
     private var globalDate : ZonedDateTime = ZonedDateTime.now()
+    private val room : TaskDataBase = CalendarApplication.room
+
+    val showTaskEvent = SingleLiveEvent<String>()
 
     fun setDate(date: String) {
         this.date = date
@@ -32,4 +39,14 @@ class MyViewModel : ViewModel() {
     }
 
     fun getFinishTime() = finishTime
+
+    fun saveTask(task : Task) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                room.taskDao().insert(task) //crash
+            }
+
+            showTaskEvent.value = "Задача добавлена"
+        }
+    }
 }
