@@ -4,18 +4,29 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_task.view.*
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
+import kotlin.concurrent.thread
 
-//TODO: Решить проблему с сохранением глобальной даты при переходе через dpd
+/*TODO: Добавленная задача отображается только после перезапуска приложения, потому что вывод задач
+        находится в onCreate().
+        Отображается только одна задача, т.к ключ - дата
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var myViewModel: MyViewModel
+    private val room : TaskDataBase = CalendarApplication.instance.room
     var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
+    val adapter = RecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +40,12 @@ class MainActivity : AppCompatActivity() {
         else
             date.text = myViewModel.getDate()
 
-        /*
+        recyclerView.adapter = adapter
+        thread {
+            adapter.tasksList = room.taskDao().getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+            adapter.notifyDataSetChanged()
+        }
+
         val c = Calendar.getInstance()
 
         calendar_icon.setOnClickListener {
@@ -37,8 +53,11 @@ class MainActivity : AppCompatActivity() {
                 c.set(Calendar.YEAR, year)
                 c.set(Calendar.MONTH, month)
                 c.set(Calendar.DAY_OF_MONTH, day)
-                myViewModel.setDate(day.toString() + "." + (month + 1).toString() + "." + year.toString())
-                date.text = myViewModel.getDate()
+                globalDate = ZonedDateTime.of(year, month + 1, day, 0, 0, 0, 0, ZoneOffset.UTC )
+                myViewModel.setGlobalDate(globalDate)
+                date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
+                myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+
             }
             DatePickerDialog(
                 this,
@@ -49,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                 c.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
-        */
     }
 
     fun currDate(view: View) {

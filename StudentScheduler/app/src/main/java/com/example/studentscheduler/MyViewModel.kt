@@ -1,5 +1,6 @@
 package com.example.studentscheduler
 
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -12,9 +13,9 @@ class MyViewModel : ViewModel() {
     private var startTime : String = ""
     private var finishTime : String = ""
     private var globalDate : ZonedDateTime = ZonedDateTime.now()
-    private val room : TaskDataBase = CalendarApplication.room
+    private val room : TaskDataBase = CalendarApplication.instance.room
 
-    private val showTaskEvent = SingleLiveEvent<String>()
+    val showTaskEvent = SingleLiveEvent<String>()
 
     fun setDate(date: String) {
         this.date = date
@@ -43,7 +44,7 @@ class MyViewModel : ViewModel() {
     fun saveTask(task : Task) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                room.taskDao().insert(task) //crash
+                room.taskDao().insert(task)
             }
 
             showTaskEvent.value = "Задача добавлена"

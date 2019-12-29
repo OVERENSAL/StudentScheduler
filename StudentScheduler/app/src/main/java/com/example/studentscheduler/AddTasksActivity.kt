@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
 import java.text.SimpleDateFormat
@@ -19,6 +20,9 @@ class AddTasksActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_tasks)
 
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
+        myViewModel.showTaskEvent.observe(this, androidx.lifecycle.Observer { text ->
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        })
 
         //кривая инициализация вьюшек
         if (myViewModel.getDate() != "")

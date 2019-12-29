@@ -4,6 +4,7 @@ import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 class CalendarApplication : Application() {
+
     lateinit var room : TaskDataBase
 
     override fun onCreate() {
@@ -11,6 +12,11 @@ class CalendarApplication : Application() {
         AndroidThreeTen.init(this)
 
         room =  TaskDataBase.getInstance(applicationContext)!!
+        instance = this
+    }
+
+    companion object {
+        lateinit var instance: CalendarApplication
     }
 
 }

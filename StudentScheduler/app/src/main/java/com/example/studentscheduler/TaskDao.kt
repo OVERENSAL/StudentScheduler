@@ -1,7 +1,6 @@
 package com.example.studentscheduler
 
 import androidx.room.*
-import org.threeten.bp.ZonedDateTime
 
 @Dao
 interface TaskDao {
