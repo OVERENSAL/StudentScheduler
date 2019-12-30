@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
+import org.threeten.bp.ZonedDateTime
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -95,7 +96,8 @@ class AddTasksActivity : AppCompatActivity() {
 
 //добавление задачи в Room
         addTaskButton.setOnClickListener {
-            val task = Task(startTimeTask = startTimeButton.text.toString(),
+            val task = Task(//id = 0,
+                startTimeTask = startTimeButton.text.toString(),
                 finishTimeTask = finishTimeButton.text.toString(),
                 textTask = editText.text.toString(),
                 dateTask = calendar_button.text.toString()

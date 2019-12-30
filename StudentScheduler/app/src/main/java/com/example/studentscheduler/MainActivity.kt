@@ -4,22 +4,18 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_task.view.*
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import kotlin.concurrent.thread
 
-/*TODO: Добавленная задача отображается только после перезапуска приложения, потому что вывод задач
-        находится в onCreate().
-        Отображается только одна задача, т.к ключ - дата
+/*TODO: Задача не отображается при добавлении на текущий день и возврате на MainActivity
+        Вылетает при множественном создании потоков
+        Решить проблему вылетов с новым типом Task(содержащий id) Удалить записи без id?
  */
 class MainActivity : AppCompatActivity() {
 
@@ -41,10 +37,7 @@ class MainActivity : AppCompatActivity() {
             date.text = myViewModel.getDate()
 
         recyclerView.adapter = adapter
-        thread {
-            adapter.tasksList = room.taskDao().getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-            adapter.notifyDataSetChanged()
-        }
+        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
 
         val c = Calendar.getInstance()
 
@@ -75,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setGlobalDate(globalDate)
         date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
         myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
     }
 
     fun prevDate(view: View) {
@@ -82,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setGlobalDate(globalDate)//изменяем глобальную дату во вьюмодели
         date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
         myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))//сохраняем измененную дату
+        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
     }
 
     fun nextDate(view: View) {
@@ -89,11 +84,19 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setGlobalDate(globalDate)
         date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
         myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
     }
 
     fun addTasksActivity(view: View) {
         val addTasksActivityIntent = Intent(this, AddTasksActivity::class.java)
         startActivity(addTasksActivityIntent)
+    }
+
+    fun getAllTasksByDate(date: String) {
+        thread {
+            adapter.tasksList = room.taskDao().getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+            adapter.notifyDataSetChanged()
+        }
     }
 
     companion object {
