@@ -14,6 +14,7 @@ import java.util.*
 import kotlin.concurrent.thread
 
 /*TODO: Задача не отображается при добавлении на текущий день и возврате на MainActivity
+        Невозможно добавить задачу на следующий год
  */
 class MainActivity : AppCompatActivity() {
 

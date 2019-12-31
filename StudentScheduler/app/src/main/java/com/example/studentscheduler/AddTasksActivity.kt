@@ -9,7 +9,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,10 +49,11 @@ class AddTasksActivity : AppCompatActivity() {
                 c.set(Calendar.YEAR, year)
                 c.set(Calendar.MONTH, month)
                 c.set(Calendar.DAY_OF_MONTH, day)
-                myViewModel.setDate(day.toString() + "." + (month + 1).toString() + "." + year.toString())
-                calendar_button.text = myViewModel.getDate()
-            }
-            DatePickerDialog(
+                myViewModel.setDate((ZonedDateTime.of(year, month + 1, day, 0, 0, 0,0, ZoneOffset.UTC))
+                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))) //такая кривая реализация даты, потому DAY_OF_MONTH и MONTH возвращает
+                calendar_button.text = myViewModel.getDate()                    //число до 10 без 0 впереди, т.е 1, а не 01, как надо
+            }                                                                   //в дальнейшем возникли проблемы с отображением записей из комнаты
+            DatePickerDialog(                                                   //т.к. дата на запрос передается в формате dd.MM.yyyy,
                 this,
                 R.style.DatePickerTheme,
                 dpd,
