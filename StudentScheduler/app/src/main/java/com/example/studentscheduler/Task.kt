@@ -4,11 +4,10 @@ import androidx.room.*
 
 @Entity
 data class Task (
-    @PrimaryKey
-//    var id: Int,
-    var dateTask: String,
-    var startTimeTask: String,
-    var finishTimeTask: String,
-    var textTask: String
+    @PrimaryKey (autoGenerate = true) var id: Long,
+    @ColumnInfo(name = "dateTask") var dateTask: String,
+    @ColumnInfo(name = "startTimeTask") var startTimeTask: String,
+    @ColumnInfo(name = "finishTimeTask") var finishTimeTask: String,
+    @ColumnInfo(name = "textTask") var textTask: String
 //    var priority:
 )

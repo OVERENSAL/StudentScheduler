@@ -14,15 +14,13 @@ import java.util.*
 import kotlin.concurrent.thread
 
 /*TODO: Задача не отображается при добавлении на текущий день и возврате на MainActivity
-        Вылетает при множественном создании потоков
-        Решить проблему вылетов с новым типом Task(содержащий id) Удалить записи без id?
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var myViewModel: MyViewModel
     private val room : TaskDataBase = CalendarApplication.instance.room
+    private val adapter = RecyclerViewAdapter()
     var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
-    val adapter = RecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +92,10 @@ class MainActivity : AppCompatActivity() {
 
     fun getAllTasksByDate(date: String) {
         thread {
-            adapter.tasksList = room.taskDao().getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-            adapter.notifyDataSetChanged()
+            adapter.tasksList = room.taskDao().getAllTasksByDate(date)
+            runOnUiThread {                     //меняю айтемы recView в UI потоке
+                adapter.notifyDataSetChanged()  //иначе вылетает, странно что не сразу
+            }
         }
     }
 

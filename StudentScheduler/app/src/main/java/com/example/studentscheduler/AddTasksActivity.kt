@@ -96,11 +96,11 @@ class AddTasksActivity : AppCompatActivity() {
 
 //добавление задачи в Room
         addTaskButton.setOnClickListener {
-            val task = Task(//id = 0,
+            val task = Task(id = 0,
+                dateTask = calendar_button.text.toString(),
                 startTimeTask = startTimeButton.text.toString(),
                 finishTimeTask = finishTimeButton.text.toString(),
-                textTask = editText.text.toString(),
-                dateTask = calendar_button.text.toString()
+                textTask = editText.text.toString()
             )
 
             myViewModel.saveTask(task)
