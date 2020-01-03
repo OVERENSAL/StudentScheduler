@@ -5,7 +5,9 @@ import android.app.TimePickerDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_add_tasks.*
@@ -14,9 +16,11 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.thread
 
 class AddTasksActivity : AppCompatActivity() {
     private lateinit var myViewModel: MyViewModel
+    private lateinit var imm : InputMethodManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +39,6 @@ class AddTasksActivity : AppCompatActivity() {
         if (myViewModel.getFinishTime() != "")
             finishTimeButton.text = myViewModel.getFinishTime()
 
-        val imm =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager //автоматически вылазит клавиатура
-        imm.toggleSoftInput(
-            InputMethodManager.SHOW_FORCED,
-            0
-        )//не убирается, когда сворачиваешь приложение с открытой клавиатурой
 
         val c = Calendar.getInstance()
         //появляется датапикер
@@ -97,7 +95,7 @@ class AddTasksActivity : AppCompatActivity() {
             ).show()
         }
 
-//добавление задачи в Room
+        //добавление задачи в Room
         addTaskButton.setOnClickListener {
             val task = Task(id = 0,
                 dateTask = calendar_button.text.toString(),
@@ -105,8 +103,26 @@ class AddTasksActivity : AppCompatActivity() {
                 finishTimeTask = finishTimeButton.text.toString(),
                 textTask = editText.text.toString()
             )
+            editText.setText("")
 
             myViewModel.saveTask(task)
+
         }
+    }
+
+    //принудительное скрытие клавиатуры
+    override fun onPause() {
+        super.onPause()
+
+        if (imm.isActive())
+            imm.hideSoftInputFromWindow(editText.windowToken, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //отображения клавиатуры принудительно, не работает через запуск с трея
+        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 }

@@ -13,8 +13,10 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import kotlin.concurrent.thread
 
-/*TODO: Задача не отображается при добавлении на текущий день и возврате на MainActivity
-        Невозможно добавить задачу на следующий год
+/*TODO: ФОРМА ДОБАВЛЕНИЯ:
+        - По умолчанию ставить дату текущего или выбранного дня
+        - Изначально устанавливать на времени ближайшее последнее время
+        - Решить проблемы с исчезанием клавиатуры // не вылазит при запуске с трея, хотя описано в onResume()????
  */
 class MainActivity : AppCompatActivity() {
 
@@ -23,20 +25,19 @@ class MainActivity : AppCompatActivity() {
     private val adapter = RecyclerViewAdapter()
     var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
 
-        globalDate = myViewModel.getGlobalDate()//получаем значение глобальной даты
-        if (myViewModel.getDate() == "") //костыль на отображение даты первый раз
-            date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
-        else
-            date.text = myViewModel.getDate()
+        myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+
+        date.text = myViewModel.getDate() //отображение даты первый раз
 
         recyclerView.adapter = adapter
-        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+        getAllTasksByDate(myViewModel.getDate())
 
         val c = Calendar.getInstance()
 
@@ -47,9 +48,9 @@ class MainActivity : AppCompatActivity() {
                 c.set(Calendar.DAY_OF_MONTH, day)
                 globalDate = ZonedDateTime.of(year, month + 1, day, 0, 0, 0, 0, ZoneOffset.UTC )
                 myViewModel.setGlobalDate(globalDate)
-                date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
                 myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-
+                date.text = myViewModel.getDate()
+                getAllTasksByDate(myViewModel.getDate())
             }
             DatePickerDialog(
                 this,
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setGlobalDate(globalDate)
         date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
         myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+        getAllTasksByDate(myViewModel.getDate())
     }
 
     fun prevDate(view: View) {
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setGlobalDate(globalDate)//изменяем глобальную дату во вьюмодели
         date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
         myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))//сохраняем измененную дату
-        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+        getAllTasksByDate(myViewModel.getDate())
     }
 
     fun nextDate(view: View) {
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setGlobalDate(globalDate)
         date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
         myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-        getAllTasksByDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
+        getAllTasksByDate(myViewModel.getDate())
     }
 
     fun addTasksActivity(view: View) {
@@ -98,6 +99,13 @@ class MainActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()  //иначе вылетает, странно что не сразу
             }
         }
+    }
+
+    // Отображение задач при добавлении на текущий день и возврате в MainActivity
+    override fun onResume() {
+        super.onResume()
+
+        getAllTasksByDate(myViewModel.getDate())
     }
 
     companion object {
