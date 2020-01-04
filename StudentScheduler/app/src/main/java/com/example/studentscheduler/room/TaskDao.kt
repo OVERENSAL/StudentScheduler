@@ -1,4 +1,4 @@
-package com.example.studentscheduler
+package com.example.studentscheduler.room
 
 import androidx.room.*
 

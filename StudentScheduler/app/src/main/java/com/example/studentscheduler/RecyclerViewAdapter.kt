@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentscheduler.room.Task
 import kotlinx.android.synthetic.main.item_task.view.*
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -13,7 +15,7 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val textTask : TextView = view.textTask
 }
 
-class RecyclerViewAdapter : RecyclerView.Adapter<ViewHolder>() {
+class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     var tasksList = listOf<Task>()
 
@@ -33,6 +35,13 @@ class RecyclerViewAdapter : RecyclerView.Adapter<ViewHolder>() {
         holder.startTime.text = taskList.startTimeTask
         holder.finishTime.text = taskList.finishTimeTask
         holder.textTask.text = taskList.textTask
+
+//        holder.itemView.setOnClickListener {
+//            Toast.makeText(, taskList.textTask, Toast.LENGTH_SHORT).show() //какой контекст?!
+//        }
     }
 
+//    interface OnItemClickListener {
+//        fun onClickListener(task : Task)
+//    }
 }

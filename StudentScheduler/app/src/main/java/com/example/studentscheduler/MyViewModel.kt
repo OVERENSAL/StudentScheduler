@@ -2,6 +2,8 @@ package com.example.studentscheduler
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studentscheduler.room.Task
+import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

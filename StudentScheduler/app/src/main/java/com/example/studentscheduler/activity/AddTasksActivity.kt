@@ -1,22 +1,23 @@
-package com.example.studentscheduler
+package com.example.studentscheduler.activity
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
+import com.example.studentscheduler.MyViewModel
+import com.example.studentscheduler.R
+import com.example.studentscheduler.RecyclerViewAdapter
+import com.example.studentscheduler.room.Task
 import kotlinx.android.synthetic.main.activity_add_tasks.*
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.thread
 
 class AddTasksActivity : AppCompatActivity() {
     private lateinit var myViewModel: MyViewModel
@@ -30,15 +31,6 @@ class AddTasksActivity : AppCompatActivity() {
         myViewModel.showTaskEvent.observe(this, androidx.lifecycle.Observer { text ->
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         })
-
-        //кривая инициализация вьюшек
-        if (myViewModel.getDate() != "")
-            calendar_button.text = myViewModel.getDate()
-        if (myViewModel.getStartTime() != "")
-            startTimeButton.text = myViewModel.getStartTime()
-        if (myViewModel.getFinishTime() != "")
-            finishTimeButton.text = myViewModel.getFinishTime()
-
 
         val c = Calendar.getInstance()
         //появляется датапикер
@@ -97,7 +89,8 @@ class AddTasksActivity : AppCompatActivity() {
 
         //добавление задачи в Room
         addTaskButton.setOnClickListener {
-            val task = Task(id = 0,
+            val task = Task(
+                id = 0,
                 dateTask = calendar_button.text.toString(),
                 startTimeTask = startTimeButton.text.toString(),
                 finishTimeTask = finishTimeButton.text.toString(),
