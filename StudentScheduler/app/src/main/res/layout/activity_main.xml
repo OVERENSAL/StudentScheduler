@@ -35,7 +35,7 @@
             android:layout_marginBottom="10dp"
             android:onClick="currDate"
             android:textColor="#FFFFFF"
-            android:textSize="35sp"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

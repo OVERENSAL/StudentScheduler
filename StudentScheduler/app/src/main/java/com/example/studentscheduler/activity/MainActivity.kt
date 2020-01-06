@@ -5,10 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
-import com.example.studentscheduler.*
-import com.example.studentscheduler.room.Task
+import com.example.studentscheduler.CalendarApplication
+import com.example.studentscheduler.MyViewModel
+import com.example.studentscheduler.R
+import com.example.studentscheduler.RecyclerViewAdapter
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.threeten.bp.ZoneOffset
@@ -18,10 +19,8 @@ import java.util.*
 import kotlin.concurrent.thread
 
 /*TODO: ГЛАВНАЯ:
+        - СДЕЛАТЬ ФУНКЦИЮ УДАЛЕНИЯ:
         - Убрать кнопки переключения дней, сделать свайпами
-        - Изменить формат вывода даты на что-то вроде Friday, January 3
-        - Скорректировать итемы для удобного и приятного просмотра задач +-
-        - Добавить функцию просмотра, удаления и выполнения(зачеркивание)+ задачи
         - Сортировать задачи по начальному времени по возрастанию
         - Выполненные задачи перекидывать вниз списка
         ФОРМА ДОБАВЛЕНИЯ:
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var myViewModel: MyViewModel
     private val room : TaskDataBase = CalendarApplication.instance.room
-    private val adapter = RecyclerViewAdapter()
+    val adapter = RecyclerViewAdapter()
     var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,19 +40,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
+        myViewModel.setInternalDate(globalDate.format(DateTimeFormatter.ofPattern(INTERNAL_DATE_FORMAT)))
+        myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(EXTERNAL_DATE_FORMAT)))
 
-        myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-
-        date.text = myViewModel.getDate() //отображение даты первый раз
-
-//        adapter = RecyclerViewAdapter(object : RecyclerViewAdapter.OnItemClickListener {
-//            override fun onClickListener(task: Task) {
-//                Toast.makeText(applicationContext, "gg", Toast.LENGTH_SHORT).show()
-//            }
-//        })
+        date.text = myViewModel.getExternalDate() //отображение даты первый раз
 
         recyclerView.adapter = adapter
-        getAllTasksByDate(myViewModel.getDate())
 
         val c = Calendar.getInstance()
 
@@ -64,11 +56,14 @@ class MainActivity : AppCompatActivity() {
                 c.set(Calendar.DAY_OF_MONTH, day)
                 globalDate = ZonedDateTime.of(year, month + 1, day, 0, 0, 0, 0, ZoneOffset.UTC )
                 myViewModel.setGlobalDate(globalDate)
-                myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(
-                    TOOLBAR_DATE_FORMAT
+                myViewModel.setInternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+                    INTERNAL_DATE_FORMAT
                 )))
-                date.text = myViewModel.getDate()
-                getAllTasksByDate(myViewModel.getDate())
+                myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+                    EXTERNAL_DATE_FORMAT
+                )))
+                date.text = myViewModel.getExternalDate()
+                getAllTasksByDate(myViewModel.getInternalDate())
             }
             DatePickerDialog(
                 this,
@@ -84,25 +79,40 @@ class MainActivity : AppCompatActivity() {
     fun currDate(view: View) {
         globalDate = ZonedDateTime.now()
         myViewModel.setGlobalDate(globalDate)
-        date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
-        myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-        getAllTasksByDate(myViewModel.getDate())
+        date.text = globalDate.format(DateTimeFormatter.ofPattern(EXTERNAL_DATE_FORMAT))
+        myViewModel.setInternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+            INTERNAL_DATE_FORMAT
+        )))
+        myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+            EXTERNAL_DATE_FORMAT
+        )))
+        getAllTasksByDate(myViewModel.getInternalDate())
     }
 
     fun prevDate(view: View) {
         globalDate = globalDate.minusDays(1)
         myViewModel.setGlobalDate(globalDate)//изменяем глобальную дату во вьюмодели
-        date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
-        myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))//сохраняем измененную дату
-        getAllTasksByDate(myViewModel.getDate())
+        date.text = globalDate.format(DateTimeFormatter.ofPattern(EXTERNAL_DATE_FORMAT))
+        myViewModel.setInternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+            INTERNAL_DATE_FORMAT
+        )))//сохраняем измененную дату
+        myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+            EXTERNAL_DATE_FORMAT
+        )))
+        getAllTasksByDate(myViewModel.getInternalDate())
     }
 
     fun nextDate(view: View) {
         globalDate = globalDate.plusDays(1)
         myViewModel.setGlobalDate(globalDate)
-        date.text = globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT))
-        myViewModel.setDate(globalDate.format(DateTimeFormatter.ofPattern(TOOLBAR_DATE_FORMAT)))
-        getAllTasksByDate(myViewModel.getDate())
+        date.text = globalDate.format(DateTimeFormatter.ofPattern(EXTERNAL_DATE_FORMAT))
+        myViewModel.setInternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+            INTERNAL_DATE_FORMAT
+        )))
+        myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
+            EXTERNAL_DATE_FORMAT
+        )))
+        getAllTasksByDate(myViewModel.getInternalDate())
     }
 
     fun addTasksActivity(view: View) {
@@ -123,10 +133,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        getAllTasksByDate(myViewModel.getDate())
+        getAllTasksByDate(myViewModel.getInternalDate())
     }
 
     companion object {
-        const val TOOLBAR_DATE_FORMAT = "dd.MM.yyyy"
+        const val INTERNAL_DATE_FORMAT = "dd.MM.yyyy"
+        const val EXTERNAL_DATE_FORMAT = "EEEE, MMMM d"
     }
 }

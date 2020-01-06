@@ -7,9 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentscheduler.activity.MainActivity
 import com.example.studentscheduler.room.Task
+import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.item_task.view.*
+import kotlin.concurrent.thread
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val startTime : TextView = view.startTime
@@ -19,7 +24,6 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
-
     var tasksList = listOf<Task>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +42,11 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         holder.startTime.text = taskList.startTimeTask
         holder.finishTime.text = taskList.finishTimeTask
         holder.textTask.text = taskList.textTask
+        
+        holder.itemView.setOnClickListener {
+            MyViewModel().deleteTask(tasksList[position])
+            MainActivity().adapter.notifyDataSetChanged()
+        }
 
         //выолнение задачи(затемнение и зачеркивание)
         holder.switch.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -59,8 +68,4 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             }
         }
     }
-
-//    interface OnItemClickListener {
-//        fun onClickListener(task : Task)
-//    }
 }

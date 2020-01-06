@@ -2,6 +2,7 @@ package com.example.studentscheduler
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studentscheduler.activity.MainActivity
 import com.example.studentscheduler.room.Task
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +11,8 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 
 class MyViewModel : ViewModel() {
-    private var date : String = ""
+    private var internalDate : String = ""
+    private var externalDate : String = ""
     private var startTime : String = ""
     private var finishTime : String = ""
     private var globalDate : ZonedDateTime = ZonedDateTime.now()
@@ -18,11 +20,17 @@ class MyViewModel : ViewModel() {
 
     val showTaskEvent = SingleLiveEvent<String>()
 
-    fun setDate(date: String) {
-        this.date = date
+    fun setExternalDate(externalDate: String) {
+        this.externalDate = externalDate
     }
 
-    fun getDate() = date
+    fun getExternalDate() = externalDate
+
+    fun setInternalDate(internalDate: String) {
+        this.internalDate = internalDate
+    }
+
+    fun getInternalDate() = internalDate
 
     fun setGlobalDate(globalDate: ZonedDateTime) {
         this.globalDate = globalDate
@@ -49,6 +57,16 @@ class MyViewModel : ViewModel() {
             }
 
             showTaskEvent.value = "Задача добавлена"
+        }
+    }
+
+    fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                room.taskDao().delete(task)
+            }
+
+            showTaskEvent.value = "Задача удалена"
         }
     }
 }
