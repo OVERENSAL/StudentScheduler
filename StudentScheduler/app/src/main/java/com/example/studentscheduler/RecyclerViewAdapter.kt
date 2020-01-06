@@ -1,10 +1,12 @@
 package com.example.studentscheduler
 
+import android.graphics.Color
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Switch
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentscheduler.room.Task
 import kotlinx.android.synthetic.main.item_task.view.*
@@ -13,6 +15,7 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val startTime : TextView = view.startTime
     val finishTime : TextView = view.finishTime
     val textTask : TextView = view.textTask
+    val switch : Switch = view.switch1
 }
 
 class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
@@ -36,9 +39,25 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         holder.finishTime.text = taskList.finishTimeTask
         holder.textTask.text = taskList.textTask
 
-//        holder.itemView.setOnClickListener {
-//            Toast.makeText(, taskList.textTask, Toast.LENGTH_SHORT).show() //какой контекст?!
-//        }
+        //выолнение задачи(затемнение и зачеркивание)
+        holder.switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
+                holder.startTime.setPaintFlags(holder.startTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
+                holder.finishTime.setTextColor(Color.parseColor("#D3D1D1"))
+                holder.finishTime.setPaintFlags(holder.finishTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
+                holder.textTask.setTextColor(Color.parseColor("#D3D1D1"))
+                holder.textTask.setPaintFlags(holder.textTask.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
+            }
+            else {
+                holder.startTime.setTextColor(Color.parseColor("#202230"))
+                holder.startTime.setPaintFlags(holder.startTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+                holder.finishTime.setTextColor(Color.parseColor("#202230"))
+                holder.finishTime.setPaintFlags(holder.finishTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+                holder.textTask.setTextColor(Color.parseColor("#202230"))
+                holder.textTask.setPaintFlags(holder.textTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+            }
+        }
     }
 
 //    interface OnItemClickListener {

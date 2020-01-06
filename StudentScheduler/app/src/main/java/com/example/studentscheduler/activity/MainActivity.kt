@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.example.studentscheduler.*
+import com.example.studentscheduler.room.Task
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.threeten.bp.ZoneOffset
@@ -20,7 +21,7 @@ import kotlin.concurrent.thread
         - Убрать кнопки переключения дней, сделать свайпами
         - Изменить формат вывода даты на что-то вроде Friday, January 3
         - Скорректировать итемы для удобного и приятного просмотра задач +-
-        - Добавить функцию просмотра, удаления и выполнения(зачеркивание) задачи
+        - Добавить функцию просмотра, удаления и выполнения(зачеркивание)+ задачи
         - Сортировать задачи по начальному времени по возрастанию
         - Выполненные задачи перекидывать вниз списка
         ФОРМА ДОБАВЛЕНИЯ:
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 //        adapter = RecyclerViewAdapter(object : RecyclerViewAdapter.OnItemClickListener {
 //            override fun onClickListener(task: Task) {
-//                Toast.makeText(baseContext, "gg", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "gg", Toast.LENGTH_SHORT).show()
 //            }
 //        })
 

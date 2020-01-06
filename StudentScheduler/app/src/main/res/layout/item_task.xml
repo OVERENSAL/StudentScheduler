@@ -5,48 +5,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="wrap_content"
+    android:minHeight="60dp">
 
     <TextView
         android:id="@+id/startTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
         android:textColor="@color/mainColor"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/separator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="8dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/separator"
         android:layout_width="20dp"
         android:layout_height="1dp"
         android:layout_marginStart="18dp"
-        android:layout_marginTop="2dp"
         android:background="@color/separatorColor"
-        app:layout_constraintBottom_toTopOf="@+id/finishTime"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startTime" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/finishTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="5dp"
         android:textColor="@color/mainColor"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="5dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/separator" />
 
     <TextView
         android:id="@+id/textTask"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:ellipsize="end"
-        android:maxLines="2"
+
         android:textColor="@color/mainColor"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
