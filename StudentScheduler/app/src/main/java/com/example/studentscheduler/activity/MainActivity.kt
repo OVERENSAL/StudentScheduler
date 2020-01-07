@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.example.studentscheduler.CalendarApplication
 import com.example.studentscheduler.MyViewModel
@@ -19,7 +20,6 @@ import java.util.*
 import kotlin.concurrent.thread
 
 /*TODO: ГЛАВНАЯ:
-        - СДЕЛАТЬ ФУНКЦИЮ УДАЛЕНИЯ:
         - Убрать кнопки переключения дней, сделать свайпами
         - Сортировать задачи по начальному времени по возрастанию
         - Выполненные задачи перекидывать вниз списка
@@ -40,10 +40,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
-        myViewModel.setInternalDate(globalDate.format(DateTimeFormatter.ofPattern(INTERNAL_DATE_FORMAT)))
-        myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(EXTERNAL_DATE_FORMAT)))
+        globalDate = myViewModel.getGlobalDate() //вытаскиваем глобальную дату из вьюмодели в случае пересоздания активити
 
-        date.text = myViewModel.getExternalDate() //отображение даты первый раз
+        //отображение даты впервые и сохранение состояния
+        if (myViewModel.getExternalDate() == "") {
+            myViewModel.setInternalDate(
+                globalDate.format(
+                    DateTimeFormatter.ofPattern(
+                        INTERNAL_DATE_FORMAT
+                    )
+                )
+            )
+            myViewModel.setExternalDate(
+                globalDate.format(
+                    DateTimeFormatter.ofPattern(
+                        EXTERNAL_DATE_FORMAT
+                    )
+                )
+            )
+            date.text = myViewModel.getExternalDate()
+        }
+        else {
+            date.text = myViewModel.getExternalDate()
+        }
 
         recyclerView.adapter = adapter
 
@@ -86,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
             EXTERNAL_DATE_FORMAT
         )))
+
         getAllTasksByDate(myViewModel.getInternalDate())
     }
 
@@ -99,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
             EXTERNAL_DATE_FORMAT
         )))
+
         getAllTasksByDate(myViewModel.getInternalDate())
     }
 
@@ -112,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         myViewModel.setExternalDate(globalDate.format(DateTimeFormatter.ofPattern(
             EXTERNAL_DATE_FORMAT
         )))
+
         getAllTasksByDate(myViewModel.getInternalDate())
     }
 
