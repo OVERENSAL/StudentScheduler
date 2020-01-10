@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
@@ -23,6 +24,7 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val finishTime : TextView = view.finishTime
     val textTask : TextView = view.textTask
     val switch : Switch = view.switch1
+    val separator : ImageView = view.imageView
 }
 
 class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
@@ -44,6 +46,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         holder.startTime.text = taskList.startTimeTask
         holder.finishTime.text = taskList.finishTimeTask
         holder.textTask.text = taskList.textTask
+
+        drawByPriority(holder, taskList)
         
         holder.itemView.setOnLongClickListener {
             deleteItem(position)
@@ -51,6 +55,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             true
         }
 
+        // свайпы, не работают когда свайпаешь непосредственно по списку
 //        holder.itemView.setOnTouchListener(object: OnSwipeTouchListener(MainActivity()) {
 //            override fun onSwipeLeft() {
 //                MainActivity().nextDate(MainActivity().next_date)
@@ -71,6 +76,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
                 holder.finishTime.setPaintFlags(holder.finishTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
                 holder.textTask.setTextColor(Color.parseColor("#D3D1D1"))
                 holder.textTask.setPaintFlags(holder.textTask.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
+                holder.separator.setBackgroundResource(R.drawable.gradient_separate_item)
+                MyViewModel().setProcessed(taskList.id)
             }
             else {
                 holder.startTime.setTextColor(Color.parseColor("#202230"))
@@ -79,6 +86,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
                 holder.finishTime.setPaintFlags(holder.finishTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
                 holder.textTask.setTextColor(Color.parseColor("#202230"))
                 holder.textTask.setPaintFlags(holder.textTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+                drawByPriority(holder, taskList)
+                MyViewModel().setProcessed(taskList.id)
             }
         }
     }
@@ -92,7 +101,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
     }
 
     //выолнение задачи(затемнение и зачеркивание)
-    private fun crossOutTask(switch: Switch, holder: ViewHolder) {
+    private fun crossOutTask(switch: Switch, holder: ViewHolder, taskList: Task) {
         if (switch.isChecked) {
             holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
             holder.startTime.setPaintFlags(holder.startTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
@@ -100,6 +109,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             holder.finishTime.setPaintFlags(holder.finishTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
             holder.textTask.setTextColor(Color.parseColor("#D3D1D1"))
             holder.textTask.setPaintFlags(holder.textTask.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
+            holder.separator.setBackgroundResource(R.drawable.gradient_separate_item)
         }
         else {
             holder.startTime.setTextColor(Color.parseColor("#202230"))
@@ -108,6 +118,20 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             holder.finishTime.setPaintFlags(holder.finishTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
             holder.textTask.setTextColor(Color.parseColor("#202230"))
             holder.textTask.setPaintFlags(holder.textTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+            drawByPriority(holder, taskList)
         }
+    }
+
+    private fun drawByPriority(holder: ViewHolder, taskList : Task) {
+        if (taskList.priority == 1)
+            holder.separator.setBackgroundResource(R.drawable.green_gradient_separate_item)
+        if (taskList.priority == 2)
+            holder.separator.setBackgroundResource(R.drawable.lyme_gradient_separate_item)
+        if (taskList.priority == 3)
+            holder.separator.setBackgroundResource(R.drawable.yellow_gradient_separate_item)
+        if (taskList.priority == 4)
+            holder.separator.setBackgroundResource(R.drawable.orange_gradient_separate_item)
+        if (taskList.priority == 5)
+            holder.separator.setBackgroundResource(R.drawable.red_gradient_separate_item)
     }
 }

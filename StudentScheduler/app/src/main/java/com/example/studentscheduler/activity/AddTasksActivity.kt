@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.example.studentscheduler.MyViewModel
 import com.example.studentscheduler.R
-import com.example.studentscheduler.RecyclerViewAdapter
 import com.example.studentscheduler.room.Task
 import kotlinx.android.synthetic.main.activity_add_tasks.*
 import org.threeten.bp.ZoneOffset
@@ -94,7 +93,9 @@ class AddTasksActivity : AppCompatActivity() {
                 dateTask = calendar_button.text.toString(),
                 startTimeTask = startTimeButton.text.toString(),
                 finishTimeTask = finishTimeButton.text.toString(),
-                textTask = editText.text.toString()
+                textTask = editText.text.toString(),
+                priority = ratingBar.rating.toInt(),
+                processed = false
             )
             editText.setText("")
 

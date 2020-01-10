@@ -2,7 +2,6 @@ package com.example.studentscheduler
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studentscheduler.activity.MainActivity
 import com.example.studentscheduler.room.Task
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +48,18 @@ class MyViewModel : ViewModel() {
     }
 
     fun getFinishTime() = finishTime
+
+    fun setProcessed(id: Long) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val task = room.taskDao().getTaskById(id)
+                if (task.processed == true)
+                    task.processed = false
+                else
+                    task.processed = true
+            }
+        }
+    }
 
     fun saveTask(task : Task) {
         viewModelScope.launch {

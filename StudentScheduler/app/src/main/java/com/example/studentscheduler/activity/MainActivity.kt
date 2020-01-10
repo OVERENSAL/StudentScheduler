@@ -16,15 +16,20 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import kotlin.concurrent.thread
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.widget.Toast
+
 
 /*TODO: ГЛАВНАЯ:
-        - Убрать кнопки переключения дней, сделать свайпами
+        - Запилить выполение в комнату
         - Сортировать задачи по начальному времени по возрастанию
         - Выполненные задачи перекидывать вниз списка
         ФОРМА ДОБАВЛЕНИЯ:
         - По умолчанию ставить дату текущего или выбранного дня
         - Изначально устанавливать на времени ближайшее последнее время
-        - Решить проблемы с исчезанием клавиатуры // не вылазит при запуске с трея, хотя описано в onResume()????
  */
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
+
         globalDate = myViewModel.getGlobalDate() //вытаскиваем глобальную дату из вьюмодели в случае пересоздания активити
 
         //отображение даты впервые и сохранение состояния
@@ -104,7 +110,23 @@ class MainActivity : AppCompatActivity() {
 //                prevDate(prev_date)
 //            }
 //        })
+//        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
+
+//    private val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback =
+//        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+//            override fun onMove(
+//                recyclerView: RecyclerView,
+//                viewHolder: RecyclerView.ViewHolder,
+//                target: RecyclerView.ViewHolder
+//            ): Boolean {
+//                return false
+//            }
+//
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                RecyclerViewAdapter().deleteItem(viewHolder.adapterPosition)
+//            }
+//        }
 
     fun currDate(view: View) {
         globalDate = ZonedDateTime.now()
