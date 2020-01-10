@@ -5,12 +5,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
-import com.example.studentscheduler.CalendarApplication
-import com.example.studentscheduler.MyViewModel
-import com.example.studentscheduler.R
-import com.example.studentscheduler.RecyclerViewAdapter
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.studentscheduler.*
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.threeten.bp.ZoneOffset
@@ -18,6 +15,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import kotlin.concurrent.thread
+import androidx.recyclerview.widget.RecyclerView
 
 /*TODO: ГЛАВНАЯ:
         - Убрать кнопки переключения дней, сделать свайпами
@@ -28,12 +26,13 @@ import kotlin.concurrent.thread
         - Изначально устанавливать на времени ближайшее последнее время
         - Решить проблемы с исчезанием клавиатуры // не вылазит при запуске с трея, хотя описано в onResume()????
  */
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var myViewModel: MyViewModel
     private val room : TaskDataBase = CalendarApplication.instance.room
-    val adapter = RecyclerViewAdapter()
-    var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
+    private val adapter = RecyclerViewAdapter()
+    private var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +92,18 @@ class MainActivity : AppCompatActivity() {
                 c.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
+
+        //переключение дней свайпами, корректно работает на месте где нет итемов
+        //после переключений дней нельзя сразу оперировать итемами, нужно сначала нажать на список
+//        recyclerView.setOnTouchListener(object:OnSwipeTouchListener(this@MainActivity) {
+//            override fun onSwipeLeft() {
+//                nextDate(next_date)
+//            }
+//
+//            override fun onSwipeRight() {
+//                prevDate(prev_date)
+//            }
+//        })
     }
 
     fun currDate(view: View) {
@@ -142,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(addTasksActivityIntent)
     }
 
-    fun getAllTasksByDate(date: String) {
+    private fun getAllTasksByDate(date: String) {
         thread {
             adapter.tasksList = room.taskDao().getAllTasksByDate(date)
             runOnUiThread {                     //обновляю айтемы recView в UI потоке

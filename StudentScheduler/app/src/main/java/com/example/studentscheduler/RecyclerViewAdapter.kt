@@ -51,6 +51,16 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             true
         }
 
+//        holder.itemView.setOnTouchListener(object: OnSwipeTouchListener(MainActivity()) {
+//            override fun onSwipeLeft() {
+//                MainActivity().nextDate(MainActivity().next_date)
+//            }
+//
+//            override fun onSwipeRight() {
+//                MainActivity().prevDate(MainActivity().prev_date)
+//            }
+//        })
+
         holder.switch.setOnCheckedChangeListener { buttonView, isChecked ->
 //            val switch = MainActivity().findViewById<Switch>(R.id.switch1)
 //            crossOutTask(switch, holder)// падает если вынесли в отдельную функцию
@@ -78,7 +88,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         MyViewModel().deleteTask(tasksList[position])//удаление задачи из room
         tasksList.remove(tasksList[position])//удаление из списка
         notifyItemRemoved(position)//анимация удаления с recyclerview
-        notifyItemRangeChanged(position, tasksList.size)
+        notifyItemRangeChanged(position, tasksList.size)//изменение размера списка
     }
 
     //выолнение задачи(затемнение и зачеркивание)
