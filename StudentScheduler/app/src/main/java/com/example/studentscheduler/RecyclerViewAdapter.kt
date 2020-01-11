@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,9 @@ import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_task.*
 import kotlinx.android.synthetic.main.item_task.view.*
+import org.threeten.bp.ZonedDateTime
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import kotlin.concurrent.thread
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -42,6 +46,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//        tasksList = sortByTime(tasksList, holder) //сортировка по времени
         val taskList = tasksList[position]
         holder.startTime.text = taskList.startTimeTask
         holder.finishTime.text = taskList.finishTimeTask
@@ -67,8 +72,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 //        })
 
         holder.switch.setOnCheckedChangeListener { buttonView, isChecked ->
-//            val switch = MainActivity().findViewById<Switch>(R.id.switch1)
-//            crossOutTask(switch, holder)// падает если вынесли в отдельную функцию
+//            val switch = MainActivity().switch1
+//            crossOutTask(switch, holder)// падает если вынести в отдельную функцию
             if (isChecked) {
                 holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
                 holder.startTime.setPaintFlags(holder.startTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
@@ -100,7 +105,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         notifyItemRangeChanged(position, tasksList.size)//изменение размера списка
     }
 
-    //выолнение задачи(затемнение и зачеркивание)
+    //выполнение задачи(затемнение и зачеркивание)
     private fun crossOutTask(switch: Switch, holder: ViewHolder, taskList: Task) {
         if (switch.isChecked) {
             holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
@@ -122,7 +127,15 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         }
     }
 
+    private fun sortByTime(tasksList: MutableList<Task>, holder: ViewHolder): MutableList<Task> {
+        var sortedTasksList = mutableListOf<Task>()
+
+        return sortedTasksList
+    }
+
     private fun drawByPriority(holder: ViewHolder, taskList : Task) {
+        if (taskList.priority == 0)
+            holder.separator.setBackgroundResource(R.drawable.gradient_separate_item)
         if (taskList.priority == 1)
             holder.separator.setBackgroundResource(R.drawable.green_gradient_separate_item)
         if (taskList.priority == 2)

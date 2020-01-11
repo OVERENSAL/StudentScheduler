@@ -18,7 +18,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddTasksActivity : AppCompatActivity() {
+class AddTasksActivity() : AppCompatActivity() {
     private lateinit var myViewModel: MyViewModel
     private lateinit var imm : InputMethodManager
 

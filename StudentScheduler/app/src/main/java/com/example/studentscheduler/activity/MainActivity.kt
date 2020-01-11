@@ -24,17 +24,17 @@ import android.widget.Toast
 
 
 /*TODO: ГЛАВНАЯ:
-        - Запилить выполение в комнату
+        - ЗАПИЛИТЬ ВЫПОЛНЕНИЕ В КОМНАТУ!
+        - Сделать возможность добавления постоянных задач
         - Сортировать задачи по начальному времени по возрастанию
         - Выполненные задачи перекидывать вниз списка
         ФОРМА ДОБАВЛЕНИЯ:
         - По умолчанию ставить дату текущего или выбранного дня
-        - Изначально устанавливать на времени ближайшее последнее время
  */
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var myViewModel: MyViewModel
+    lateinit var myViewModel: MyViewModel
     private val room : TaskDataBase = CalendarApplication.instance.room
     private val adapter = RecyclerViewAdapter()
     private var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
