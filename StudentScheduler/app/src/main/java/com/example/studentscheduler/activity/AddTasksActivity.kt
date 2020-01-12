@@ -18,13 +18,18 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddTasksActivity() : AppCompatActivity() {
+class AddTasksActivity : AppCompatActivity() {
     private lateinit var myViewModel: MyViewModel
     private lateinit var imm : InputMethodManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_tasks)
+
+        //принятие текущего числа
+        val arg = intent.extras
+        val name = arg!!.get("InternalDate")!!.toString()
+        calendar_button.text = name
 
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
         myViewModel.showTaskEvent.observe(this, androidx.lifecycle.Observer { text ->

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.studentscheduler.*
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,26 +14,16 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import kotlin.concurrent.thread
-import androidx.recyclerview.widget.RecyclerView
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.widget.Toast
-
 
 /*TODO: ГЛАВНАЯ:
         - ЗАПИЛИТЬ ВЫПОЛНЕНИЕ В КОМНАТУ!
         - Сделать возможность добавления постоянных задач
-        - Сортировать задачи по начальному времени по возрастанию
         - Выполненные задачи перекидывать вниз списка
-        ФОРМА ДОБАВЛЕНИЯ:
-        - По умолчанию ставить дату текущего или выбранного дня
  */
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var myViewModel: MyViewModel
+    private lateinit var myViewModel: MyViewModel
     private val room : TaskDataBase = CalendarApplication.instance.room
     private val adapter = RecyclerViewAdapter()
     private var globalDate: ZonedDateTime = ZonedDateTime.now() //определение глобального времени для прибавления/вычитания дней
@@ -172,6 +161,7 @@ class MainActivity : AppCompatActivity() {
 
     fun addTasksActivity(view: View) {
         val addTasksActivityIntent = Intent(this, AddTasksActivity::class.java)
+        addTasksActivityIntent.putExtra("InternalDate", myViewModel.getInternalDate())//передача текущего числа
         startActivity(addTasksActivityIntent)
     }
 

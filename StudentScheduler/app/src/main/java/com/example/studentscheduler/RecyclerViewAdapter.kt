@@ -2,26 +2,20 @@ package com.example.studentscheduler
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.studentscheduler.activity.MainActivity
 import com.example.studentscheduler.room.Task
-import com.example.studentscheduler.room.TaskDataBase
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_task.*
 import kotlinx.android.synthetic.main.item_task.view.*
-import org.threeten.bp.ZonedDateTime
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import kotlin.concurrent.thread
+import java.time.LocalDate
+import java.time.LocalTime
+import kotlin.math.min
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val startTime : TextView = view.startTime
@@ -45,8 +39,9 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         return tasksList.count()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        tasksList = sortByTime(tasksList, holder) //сортировка по времени
+        tasksList = sortTaskByTime(tasksList) //сортировка по времени
         val taskList = tasksList[position]
         holder.startTime.text = taskList.startTimeTask
         holder.finishTime.text = taskList.finishTimeTask
@@ -72,28 +67,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 //        })
 
         holder.switch.setOnCheckedChangeListener { buttonView, isChecked ->
-//            val switch = MainActivity().switch1
-//            crossOutTask(switch, holder)// падает если вынести в отдельную функцию
-            if (isChecked) {
-                holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
-                holder.startTime.setPaintFlags(holder.startTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
-                holder.finishTime.setTextColor(Color.parseColor("#D3D1D1"))
-                holder.finishTime.setPaintFlags(holder.finishTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
-                holder.textTask.setTextColor(Color.parseColor("#D3D1D1"))
-                holder.textTask.setPaintFlags(holder.textTask.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
-                holder.separator.setBackgroundResource(R.drawable.gradient_separate_item)
-                MyViewModel().setProcessed(taskList.id)
-            }
-            else {
-                holder.startTime.setTextColor(Color.parseColor("#202230"))
-                holder.startTime.setPaintFlags(holder.startTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
-                holder.finishTime.setTextColor(Color.parseColor("#202230"))
-                holder.finishTime.setPaintFlags(holder.finishTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
-                holder.textTask.setTextColor(Color.parseColor("#202230"))
-                holder.textTask.setPaintFlags(holder.textTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
-                drawByPriority(holder, taskList)
-                MyViewModel().setProcessed(taskList.id)
-            }
+            crossOutTask(holder.switch, holder, taskList)// падает если вынести в отдельную функцию
         }
     }
 
@@ -115,6 +89,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             holder.textTask.setTextColor(Color.parseColor("#D3D1D1"))
             holder.textTask.setPaintFlags(holder.textTask.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
             holder.separator.setBackgroundResource(R.drawable.gradient_separate_item)
+            MyViewModel().setProcessed(taskList.id)
+
         }
         else {
             holder.startTime.setTextColor(Color.parseColor("#202230"))
@@ -124,12 +100,27 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             holder.textTask.setTextColor(Color.parseColor("#202230"))
             holder.textTask.setPaintFlags(holder.textTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
             drawByPriority(holder, taskList)
+            MyViewModel().setProcessed(taskList.id)
         }
     }
 
-    private fun sortByTime(tasksList: MutableList<Task>, holder: ViewHolder): MutableList<Task> {
-        var sortedTasksList = mutableListOf<Task>()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sortTaskByTime(tasksList: MutableList<Task>): MutableList<Task> {
+        val sortedTasksList = mutableListOf<Task>()
 
+        for (i in 0 until tasksList.size) {
+            var minTime = LocalTime.parse("23:59")
+            var minTaskByTime = tasksList[0]
+            for (j in 0 until tasksList.size) {
+                val time = LocalTime.parse(tasksList[j].startTimeTask)
+                if (minTime.isAfter(time)) {
+                    minTime = time
+                    minTaskByTime = tasksList[j]
+                }
+            }
+            sortedTasksList.add(minTaskByTime)
+            tasksList.remove(minTaskByTime)
+        }
         return sortedTasksList
     }
 

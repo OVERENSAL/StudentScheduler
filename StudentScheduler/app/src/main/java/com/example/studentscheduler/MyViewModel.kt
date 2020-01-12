@@ -53,10 +53,11 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val task = room.taskDao().getTaskById(id)
-                if (task.processed == true)
+                task.processed = task.processed != true
+                /*if (task.processed == true)
                     task.processed = false
                 else
-                    task.processed = true
+                    task.processed = true*/
             }
         }
     }
