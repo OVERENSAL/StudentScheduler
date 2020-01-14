@@ -7,21 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentscheduler.room.Task
 import kotlinx.android.synthetic.main.item_task.view.*
-import java.time.LocalDate
+import net.igenius.customcheckbox.CustomCheckBox
 import java.time.LocalTime
-import kotlin.math.min
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val startTime : TextView = view.startTime
     val finishTime : TextView = view.finishTime
     val textTask : TextView = view.textTask
-    val switch : Switch = view.switch1
+    val checkBox : CustomCheckBox = view.checkbox
     val separator : ImageView = view.imageView
 }
 
@@ -55,7 +53,6 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             true
         }
 
-        // свайпы, не работают когда свайпаешь непосредственно по списку
 //        holder.itemView.setOnTouchListener(object: OnSwipeTouchListener(MainActivity()) {
 //            override fun onSwipeLeft() {
 //                MainActivity().nextDate(MainActivity().next_date)
@@ -66,8 +63,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 //            }
 //        })
 
-        holder.switch.setOnCheckedChangeListener { buttonView, isChecked ->
-            crossOutTask(holder.switch, holder, taskList)// падает если вынести в отдельную функцию
+        holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
+            crossOutTask(holder.checkBox, holder, taskList)
         }
     }
 
@@ -80,8 +77,8 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
     }
 
     //выполнение задачи(затемнение и зачеркивание)
-    private fun crossOutTask(switch: Switch, holder: ViewHolder, taskList: Task) {
-        if (switch.isChecked) {
+    private fun crossOutTask(checkBox: CustomCheckBox, holder: ViewHolder, taskList: Task) {
+        if (checkBox.isChecked) {
             holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
             holder.startTime.setPaintFlags(holder.startTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
             holder.finishTime.setTextColor(Color.parseColor("#D3D1D1"))

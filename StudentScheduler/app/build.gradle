@@ -45,4 +45,6 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:2.2.3"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
+//    api 'com.uniquestudio:checkbox:1.0.10'
+    api 'net.igenius:customcheckbox:1.3'
 }

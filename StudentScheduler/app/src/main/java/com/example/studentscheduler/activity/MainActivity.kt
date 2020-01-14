@@ -18,7 +18,6 @@ import kotlin.concurrent.thread
 /*TODO: ГЛАВНАЯ:
         - ЗАПИЛИТЬ ВЫПОЛНЕНИЕ В КОМНАТУ!
         - Сделать возможность добавления постоянных задач
-        - Выполненные задачи перекидывать вниз списка
  */
 
 class MainActivity : AppCompatActivity() {
