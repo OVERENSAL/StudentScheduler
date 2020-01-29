@@ -26,15 +26,24 @@ class AddTasksActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_tasks)
 
-        //принятие текущего числа
-        val arg = intent.extras
-        val name = arg!!.get("InternalDate")!!.toString()
-        calendar_button.text = name
-
         myViewModel = ViewModelProviders.of(this)[MyViewModel::class.java] //определение viewmodel
         myViewModel.showTaskEvent.observe(this, androidx.lifecycle.Observer { text ->
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         })
+
+        //принятие текущего числа в calendar_button
+        val arg = intent.extras
+        val name = arg!!.get("InternalDate")!!.toString()
+
+        //определение полей при пересоздании активити
+        if (!(myViewModel.getInternalDate().isEmpty()))
+            calendar_button.text = myViewModel.getInternalDate()
+        else
+            calendar_button.text = name
+        if (!(myViewModel.getStartTime().isEmpty()))
+            startTimeButton.text = myViewModel.getStartTime()
+        if (!(myViewModel.getFinishTime().isEmpty()))
+            finishTimeButton.text = myViewModel.getFinishTime()
 
         val c = Calendar.getInstance()
         //появляется датапикер

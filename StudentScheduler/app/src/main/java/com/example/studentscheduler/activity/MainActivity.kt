@@ -2,21 +2,24 @@ package com.example.studentscheduler.activity
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProviders
 import com.example.studentscheduler.*
+import com.example.studentscheduler.room.Task
 import com.example.studentscheduler.room.TaskDataBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalTime
 import java.util.*
 import kotlin.concurrent.thread
 
 /*TODO: ГЛАВНАЯ:
-        - ЗАПИЛИТЬ ВЫПОЛНЕНИЕ В КОМНАТУ!
         - Сделать возможность добавления постоянных задач
  */
 
@@ -86,35 +89,7 @@ class MainActivity : AppCompatActivity() {
                 c.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
-
-        //переключение дней свайпами, корректно работает на месте где нет итемов
-        //после переключений дней нельзя сразу оперировать итемами, нужно сначала нажать на список
-//        recyclerView.setOnTouchListener(object:OnSwipeTouchListener(this@MainActivity) {
-//            override fun onSwipeLeft() {
-//                nextDate(next_date)
-//            }
-//
-//            override fun onSwipeRight() {
-//                prevDate(prev_date)
-//            }
-//        })
-//        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
-
-//    private val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback =
-//        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//            override fun onMove(
-//                recyclerView: RecyclerView,
-//                viewHolder: RecyclerView.ViewHolder,
-//                target: RecyclerView.ViewHolder
-//            ): Boolean {
-//                return false
-//            }
-//
-//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                RecyclerViewAdapter().deleteItem(viewHolder.adapterPosition)
-//            }
-//        }
 
     fun currDate(view: View) {
         globalDate = ZonedDateTime.now()
@@ -166,11 +141,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun getAllTasksByDate(date: String) {
         thread {
-            adapter.tasksList = room.taskDao().getAllTasksByDate(date)
+            //берем список задач из комнаты и сортируем, отправляем в адаптер уже отсортированный список
+            adapter.tasksList = sortTaskByTime(room.taskDao().getAllTasksByDate(date))
             runOnUiThread {                     //обновляю айтемы recView в UI потоке
                 adapter.notifyDataSetChanged()  //иначе вылетает, странно что не сразу
             }
         }
+    }
+
+    private fun sortTaskByTime(tasksList: MutableList<Task>): MutableList<Task> {
+        val sortedTasksList = mutableListOf<Task>()
+
+        for (i in 0 until tasksList.size) {
+            var minTime = LocalTime.parse("23:59")
+            var minTaskByTime = tasksList[0]
+            for (j in 0 until tasksList.size) {
+                val time = LocalTime.parse(tasksList[j].startTimeTask)
+                if (minTime.isAfter(time)) {
+                    minTime = time
+                    minTaskByTime = tasksList[j]
+                }
+            }
+            sortedTasksList.add(minTaskByTime)
+            tasksList.remove(minTaskByTime)
+        }
+        return sortedTasksList
     }
 
     // Отображение задач при добавлении на текущий день и возврате в MainActivity

@@ -13,7 +13,9 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(task : Task)
 
+    @Update
+    fun update(task: Task)
+
     @Delete
     fun delete(task: Task)
-
 }

@@ -49,19 +49,6 @@ class MyViewModel : ViewModel() {
 
     fun getFinishTime() = finishTime
 
-    fun setProcessed(id: Long) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val task = room.taskDao().getTaskById(id)
-                task.processed = task.processed != true
-                /*if (task.processed == true)
-                    task.processed = false
-                else
-                    task.processed = true*/
-            }
-        }
-    }
-
     fun saveTask(task : Task) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -69,6 +56,14 @@ class MyViewModel : ViewModel() {
             }
 
             showTaskEvent.value = "Задача добавлена"
+        }
+    }
+
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                room.taskDao().update(task)
+            }
         }
     }
 

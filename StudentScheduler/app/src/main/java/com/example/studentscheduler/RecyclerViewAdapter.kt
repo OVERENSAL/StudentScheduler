@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentscheduler.room.Task
+import com.example.studentscheduler.room.TaskDao
 import kotlinx.android.synthetic.main.item_task.view.*
 import net.igenius.customcheckbox.CustomCheckBox
-import java.time.LocalTime
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val startTime : TextView = view.startTime
@@ -39,33 +40,34 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        tasksList = sortTaskByTime(tasksList) //сортировка по времени
         val taskList = tasksList[position]
         holder.startTime.text = taskList.startTimeTask
         holder.finishTime.text = taskList.finishTimeTask
         holder.textTask.text = taskList.textTask
 
-        drawByPriority(holder, taskList)
-        
         holder.itemView.setOnLongClickListener {
             deleteItem(position)
-
             true
         }
 
-//        holder.itemView.setOnTouchListener(object: OnSwipeTouchListener(MainActivity()) {
-//            override fun onSwipeLeft() {
-//                MainActivity().nextDate(MainActivity().next_date)
-//            }
-//
-//            override fun onSwipeRight() {
-//                MainActivity().prevDate(MainActivity().prev_date)
-//            }
-//        })
-
+        //сохранение состояния checkbox'a
         holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
             crossOutTask(holder.checkBox, holder, taskList)
+            if (checkBox.isChecked) {
+                taskList.processed = true
+                MyViewModel().updateTask(taskList)
+            }
+            else {
+                taskList.processed = false
+                MyViewModel().updateTask(taskList)
+            }
         }
+
+        if (taskList.processed == true) {
+            holder.checkBox.setChecked(true)
+        }
+        else
+            holder.checkBox.setChecked(false)
     }
 
     //удаление итема
@@ -76,7 +78,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         notifyItemRangeChanged(position, tasksList.size)//изменение размера списка
     }
 
-    //выполнение задачи(затемнение и зачеркивание)
+    //выполнение задачи(осветление и зачеркивание)
     private fun crossOutTask(checkBox: CustomCheckBox, holder: ViewHolder, taskList: Task) {
         if (checkBox.isChecked) {
             holder.startTime.setTextColor(Color.parseColor("#D3D1D1"))
@@ -86,8 +88,6 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             holder.textTask.setTextColor(Color.parseColor("#D3D1D1"))
             holder.textTask.setPaintFlags(holder.textTask.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
             holder.separator.setBackgroundResource(R.drawable.gradient_separate_item)
-            MyViewModel().setProcessed(taskList.id)
-
         }
         else {
             holder.startTime.setTextColor(Color.parseColor("#202230"))
@@ -97,28 +97,7 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
             holder.textTask.setTextColor(Color.parseColor("#202230"))
             holder.textTask.setPaintFlags(holder.textTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
             drawByPriority(holder, taskList)
-            MyViewModel().setProcessed(taskList.id)
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun sortTaskByTime(tasksList: MutableList<Task>): MutableList<Task> {
-        val sortedTasksList = mutableListOf<Task>()
-
-        for (i in 0 until tasksList.size) {
-            var minTime = LocalTime.parse("23:59")
-            var minTaskByTime = tasksList[0]
-            for (j in 0 until tasksList.size) {
-                val time = LocalTime.parse(tasksList[j].startTimeTask)
-                if (minTime.isAfter(time)) {
-                    minTime = time
-                    minTaskByTime = tasksList[j]
-                }
-            }
-            sortedTasksList.add(minTaskByTime)
-            tasksList.remove(minTaskByTime)
-        }
-        return sortedTasksList
     }
 
     private fun drawByPriority(holder: ViewHolder, taskList : Task) {
