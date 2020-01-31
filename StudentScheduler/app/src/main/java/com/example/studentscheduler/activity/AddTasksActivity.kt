@@ -88,7 +88,6 @@ class AddTasksActivity : AppCompatActivity() {
             ratingBar.setRating(1.0F)
 
             myViewModel.saveTask(task)
-            Toast.makeText(applicationContext, curr.plusDays(1).toString(), Toast.LENGTH_SHORT).show()
             if (radioButton1.isChecked) {
                 while (curr.isBefore(lastDate)) {
                     Thread.sleep(100) //из за того что сохраняется задача в другом потоке, даты успевают обновиться и
