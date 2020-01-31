@@ -88,6 +88,7 @@ class AddTasksActivity : AppCompatActivity() {
             ratingBar.setRating(1.0F)
 
             myViewModel.saveTask(task)
+            Toast.makeText(applicationContext, curr.plusDays(1).toString(), Toast.LENGTH_SHORT).show()
             if (radioButton1.isChecked) {
                 while (curr.isBefore(lastDate)) {
                     Thread.sleep(100) //из за того что сохраняется задача в другом потоке, даты успевают обновиться и
@@ -166,7 +167,7 @@ class AddTasksActivity : AppCompatActivity() {
 
     companion object {
         const val DATE_FORMAT = "dd.MM.yyyy"
-        const val TIME_FORMAT = "HH.mm"
+        const val TIME_FORMAT = "HH:mm"
 
     }
 }

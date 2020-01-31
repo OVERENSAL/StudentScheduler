@@ -142,7 +142,8 @@ class MainActivity : AppCompatActivity() {
     private fun getAllTasksByDate(date: String) {
         thread {
             //берем список задач из комнаты и сортируем, отправляем в адаптер уже отсортированный список
-            adapter.tasksList = sortTaskByTime(room.taskDao().getAllTasksByDate(date))
+//            adapter.tasksList = sortTaskByTime(room.taskDao().getAllTasksByDate(date))
+            adapter.tasksList = room.taskDao().getAllTasksByDate(date)
             runOnUiThread {                     //обновляю айтемы recView в UI потоке
                 adapter.notifyDataSetChanged()  //иначе вылетает, странно что не сразу
             }
