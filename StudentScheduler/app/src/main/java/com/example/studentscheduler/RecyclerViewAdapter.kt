@@ -38,7 +38,6 @@ class RecyclerViewAdapter: RecyclerView.Adapter<ViewHolder>() {
         return tasksList.count()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val taskList = tasksList[position]
         holder.startTime.text = taskList.startTimeTask

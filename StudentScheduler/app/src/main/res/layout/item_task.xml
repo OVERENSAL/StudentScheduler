@@ -44,9 +44,10 @@
 
     <TextView
         android:id="@+id/textTask"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:paddingEnd="100dp"
         android:textColor="@color/mainColor"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"

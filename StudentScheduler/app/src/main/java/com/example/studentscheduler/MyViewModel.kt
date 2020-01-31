@@ -55,7 +55,7 @@ class MyViewModel : ViewModel() {
                 room.taskDao().insert(task)
             }
 
-            showTaskEvent.value = "Задача добавлена"
+            showTaskEvent.value = "Task added"
         }
     }
 
@@ -73,7 +73,7 @@ class MyViewModel : ViewModel() {
                 room.taskDao().delete(task)
             }
 
-            showTaskEvent.value = "Задача удалена"
+            showTaskEvent.value = "Task deleted"
         }
     }
 }

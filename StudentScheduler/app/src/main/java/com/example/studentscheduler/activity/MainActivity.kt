@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
             DatePickerDialog(
                 this,
-                R.style.DatePickerTheme,
+                R.style.MainTheme,
                 dpd,
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
